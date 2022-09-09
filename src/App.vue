@@ -1,3 +1,7 @@
 <template>
-  <div>VF Paint</div>
+  <VfPaint />
 </template>
+
+<script lang="ts" setup>
+import VfPaint from "./vf-paint";
+</script>
