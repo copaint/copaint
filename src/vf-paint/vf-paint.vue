@@ -1,8 +1,13 @@
 <template>
   <div class="flex flex-col w-screen h-screen">
-    <div class="h-10 border-b border-dark-800 bg-dark-100"></div>
+    <!-- menu -->
+    <div class="h-10 border-b border-dark-800 bg-dark-100">
+      <VfMenu />
+    </div>
+    <!-- tool setting -->
     <div class="h-9 border-b border-dark-800 bg-dark-200"></div>
     <div class="flex-1 flex overflow-hidden">
+      <!-- toolbars -->
       <div class="w-10 bg-dark-200"></div>
       <div class="flex-1 bg-dark-800 overflow-auto bg-sky-800">
         <VfCanvas />
@@ -29,4 +34,5 @@
 </template>
 <script lang="ts" setup>
 import VfCanvas from '../vf-canvas';
+import VfMenu from '../vf-menu';
 </script>
