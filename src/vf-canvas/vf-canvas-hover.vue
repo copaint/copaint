@@ -1,10 +1,8 @@
 <template>
   <div
     class="absolute inset-0 overflow-hidden group"
-    @mousemove="handleMouseMove"
     @mousedown="handleMouseDown"
-    @mouseleave="handleMouseUp"
-    @mouseup="handleMouseUp"
+    @mousemove="handleMouseMove"
   >
     <div
       class="absolute border box-border border-sky-500 bg-sky-500/60 pointer-events-none dark:hover:(bg-transparent w-4) hidden group-hover:block"
@@ -18,6 +16,7 @@ import { computed, ref } from 'vue';
 const props = defineProps<{
   width: number;
   height: number;
+  scale: number;
   color?: string;
 }>();
 
@@ -32,36 +31,45 @@ const position = ref({
 
 const style = computed(() => {
   const { x, y } = position.value;
-  const { width, height } = props;
+  const { scale } = props;
   return {
     transform: `translate(${x}px, ${y}px)`,
-    width: `${width}px`,
-    height: `${height}px`,
+    width: `${scale}px`,
+    height: `${scale}px`,
   };
 });
 
 const drawPoint = (e: MouseEvent) => {
-  const { width, height } = props;
+  const { scale, width, height } = props;
   const { offsetX, offsetY } = e;
-  const [x, y] = [Math.floor(offsetX / width), Math.floor(offsetY / height)];
-  emit('drawPoint', { x, y });
-};
-
-let isMoving = false;
-const handleMouseDown = (e: MouseEvent) => {
-  isMoving = true;
-  drawPoint(e);
-};
-const handleMouseMove = (e: MouseEvent) => {
-  const { width, height } = props;
-  const { offsetX, offsetY } = e;
-  position.value.x = Math.floor(offsetX / width) * width;
-  position.value.y = Math.floor(offsetY / height) * height;
-  if (isMoving) {
-    drawPoint(e);
+  const [x, y] = [Math.floor(offsetX / scale), Math.floor(offsetY / scale)];
+  if (x >= 0 && x < width && y >= 0 && y < height) {
+    emit('drawPoint', { x, y });
   }
 };
-const handleMouseUp = () => {
-  isMoving = false;
+
+let currentTarget: EventTarget | null = null;
+const handleMouseDown = (e: MouseEvent) => {
+  currentTarget = e.target;
+  drawPoint(e);
+  const handleMouseMove = (e: MouseEvent) => {
+    if (e.target !== currentTarget) {
+      return;
+    }
+    drawPoint(e);
+  };
+  const handleMouseUp = () => {
+    currentTarget = null;
+    window.removeEventListener('mousemove', handleMouseMove);
+    window.removeEventListener('mouseup', handleMouseUp);
+  };
+  window.addEventListener('mousemove', handleMouseMove);
+  window.addEventListener('mouseup', handleMouseUp);
+};
+const handleMouseMove = (e: MouseEvent) => {
+  const { scale } = props;
+  const { offsetX, offsetY } = e;
+  position.value.x = Math.floor(offsetX / scale) * scale;
+  position.value.y = Math.floor(offsetY / scale) * scale;
 };
 </script>
