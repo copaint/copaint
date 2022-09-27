@@ -16,6 +16,7 @@
         <div class="absolute bottom-0 w-full p-1">
           <div style="color: red; font-size: 280px">
             <svg
+              id="preview"
               class="bg-white"
               width="1em"
               height="1em"

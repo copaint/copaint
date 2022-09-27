@@ -9,11 +9,8 @@
         class="bg-white"
       ></canvas>
       <VfCanvasGrid v-bind="canvasInfo" />
-      <VfCanvasHover
-        v-bind="canvasInfo"
-        @draw-point="handleDrawPoint"
-      />
-      <div class="absolute top-0 -right-16">
+      <VfCanvasHover v-bind="canvasInfo" @draw-point="handleDrawPoint" />
+      <div class="absolute top-0 -right-24">
         <button
           v-for="b in toolbars"
           :key="b.code"
@@ -23,7 +20,8 @@
         >
           {{ b.label }}
         </button>
-        <button @click="handleExport" class="block mb-2">导出</button>
+        <button @click="handlePreview" class="block mb-2">预览</button>
+        <button @click="handleExportSvg" class="block mb-2">导出为SVG</button>
         <button @click="handleClear" class="block mb-2">清除</button>
       </div>
     </div>
@@ -101,7 +99,7 @@ const handleDrawPoint = (point: Point) => {
 };
 
 const handleClear = () => {
-  if (canvasEl.value) {
+  if (window.confirm('确定要清除吗？') && canvasEl.value) {
     const ctx = canvasEl.value.getContext('2d');
     if (ctx) {
       const { width, height } = canvasInfo.value;
@@ -113,7 +111,7 @@ const handleClear = () => {
   }
 };
 
-const handleExport = () => {
+const handlePreview = () => {
   const svg = document.querySelector('#svg');
   if (svg) {
     svg.innerHTML = '';
@@ -128,7 +126,7 @@ const handleExport = () => {
     );
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     path.setAttribute('d', d.join(' '));
-    path.setAttribute('stroke-width', '1')
+    path.setAttribute('stroke-width', '1');
     svg.appendChild(path);
     // pixels.forEach((col, x) =>
     //   col.forEach((c, y) => {
@@ -146,7 +144,21 @@ const handleExport = () => {
     //     svg.appendChild(rect);
     //   })
     // );
-    console.log(svg);
+  }
+};
+
+const handleExportSvg = () => {
+  handlePreview();
+  const preview = document.querySelector('#preview');
+  if (preview) {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(
+      new Blob([preview.outerHTML], { type: 'xml/svg' })
+    );
+    a.setAttribute('download', 'export.svg');
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => document.body.removeChild(a), 1000);
   }
 };
 </script>
