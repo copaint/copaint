@@ -1,7 +1,8 @@
 <template>
-  <VfPaint />
+  <Copaint />
 </template>
 
 <script lang="ts" setup>
-import VfPaint from "./vf-paint";
+import Copaint from './copaint';
+
 </script>

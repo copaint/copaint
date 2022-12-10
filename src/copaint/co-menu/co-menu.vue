@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts" setup>
-import VfMenuItem from './vf-menu-item.vue';
+import VfMenuItem from './co-menu-item.vue';
 
 const menu = [
   { label: '文件(F)' },
