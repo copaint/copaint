@@ -46,6 +46,13 @@ export const useCopaintStore = defineStore('copaintStore', () => {
     };
   });
 
+  const canvasFullToScreen = () => {
+    if (!wrapperEl.value) return;
+    const { width, height } = wrapperEl.value.getBoundingClientRect();
+    const { width: w, height: h } = settings.value.pageSize;
+    settings.value.view.scale = Math.floor(Math.min(width / w, height / h));
+  };
+
   watchEffect((onCleanup) => {
     if (wrapperEl.value && canvasEl.value) {
       onCleanup(watchCanvasWrapper(wrapperEl.value, canvasEl.value, settings));
@@ -58,5 +65,6 @@ export const useCopaintStore = defineStore('copaintStore', () => {
     wrapperEl,
     canvasEl,
     canvasInfo,
+    canvasFullToScreen,
   };
 });
