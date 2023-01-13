@@ -1,6 +1,6 @@
 <template>
   <li class="h-full flex items-center px-3 text-white/60 hover:text-white/80 select-none"
-    :class="{ 'bg-dark-50': popoverVisible }" ref="btnEl" @click="handleClickBtn">
+    :class="{ 'bg-dark-50': popoverVisible }" ref="btnEl" @mouseenter="handleMoveEnter" @click="handleClickBtn">
     <span class="text-sm">{{ item.label }}</span>
   </li>
   <!-- popover -->
@@ -21,24 +21,26 @@
 import { computed, ref } from 'vue';
 import { onClickOutside } from '@vueuse/core'
 import { MenuItem, MenuSubItem } from './types';
+import { useInjectVisible } from './uses';
 
-defineProps<{
+const props = defineProps<{
   item: MenuItem;
+  popoverVisible?: boolean;
 }>();
 
 const emits = defineEmits<{
   (event: 'item-click', code: MenuSubItem['code']): void;
+  (event: 'menu-click', key: MenuItem['key']): void;
+  (event: 'menu-mouseenter', key: MenuItem['key']): void;
 }>()
-
-const popoverVisible = ref(false);
 
 const btnEl = ref<HTMLLIElement>();
 
-onClickOutside(btnEl, (event) => {
-  if (popoverVisible.value) {
-    popoverVisible.value = false;
-  }
-})
+// onClickOutside(btnEl, (event) => {
+//   if (popoverVisible.value) {
+//     popoverVisible.value = false;
+//   }
+// })
 
 const popoverStyle = computed(() => {
   if (!btnEl.value) return {};
@@ -50,8 +52,12 @@ const popoverStyle = computed(() => {
 });
 
 const handleClickBtn = () => {
-  popoverVisible.value = !popoverVisible.value;
+  emits('menu-click', props.item.key);
 };
+
+const handleMoveEnter = () => {
+  emits('menu-mouseenter', props.item.key);
+}
 
 const handleItemClick = (item: MenuSubItem) => {
   item.onClick?.();

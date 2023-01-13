@@ -9,5 +9,6 @@ export type MenuSubItem = {
 
 export type MenuItem = {
   label: string;
+  key: string;
   children?: MenuSubItem[];
 };

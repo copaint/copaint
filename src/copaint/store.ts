@@ -50,13 +50,20 @@ export const useCopaintStore = defineStore('copaintStore', () => {
     if (!wrapperEl.value) return;
     const { width, height } = wrapperEl.value.getBoundingClientRect();
     const { width: w, height: h } = settings.value.pageSize;
-    settings.value.view.scale = Math.floor(Math.min(width / w, height / h));
+    settings.value.view.scale = Math.floor(
+      Math.max(1, Math.min((width - 200) / w, (height - 20) / h))
+    );
   };
 
   watchEffect((onCleanup) => {
     if (wrapperEl.value && canvasEl.value) {
       onCleanup(watchCanvasWrapper(wrapperEl.value, canvasEl.value, settings));
     }
+  });
+
+  const dialogVisible = ref({
+    newFile: true,
+    about: false,
   });
 
   return {
@@ -66,5 +73,6 @@ export const useCopaintStore = defineStore('copaintStore', () => {
     canvasEl,
     canvasInfo,
     canvasFullToScreen,
+    dialogVisible,
   };
 });

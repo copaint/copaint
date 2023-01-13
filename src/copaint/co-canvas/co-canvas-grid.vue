@@ -13,7 +13,6 @@ const gridEl = ref<HTMLCanvasElement>();
 
 const canvasStyle = computed(() => {
   const { width, height } = canvasInfo.value.size;
-  console.log('canvasStyle', { width, height });
   return {
     width: `${width}px`,
     height: `${height}px`,

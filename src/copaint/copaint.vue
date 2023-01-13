@@ -26,15 +26,21 @@
       </div>
     </div>
   </div>
+  <CoNewFileDialog v-model:visible="dialogVisible.newFile" />
+  <CoAboutDialog v-model:visible="dialogVisible.about" />
 </template>
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import VfCanvas from './co-canvas';
 import CoMenu from './co-menu';
+import CoNewFileDialog from './components/co-dialog/co-new-file-dialog.vue';
+import CoAboutDialog from './components/co-dialog/co-about-dialog.vue';
 import { useCopaintStore } from './store';
 
-const { settings, wrapperEl, canvasEl, isMounted, canvasInfo } = storeToRefs(useCopaintStore());
+const { settings, dialogVisible, wrapperEl, canvasEl, isMounted, canvasInfo } = storeToRefs(
+  useCopaintStore()
+);
 
 const svgViewBox = computed(() => {
   const { width, height } = settings.value.pageSize;
@@ -48,6 +54,4 @@ const svgSize = computed(() => {
     height: `${height / width}em`,
   };
 });
-
 </script>
-  

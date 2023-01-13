@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vueuse/components": "^9.9.0",
     "@vueuse/core": "^9.6.0",
     "mitt": "^3.0.0",
     "pinia": "^2.0.27",
